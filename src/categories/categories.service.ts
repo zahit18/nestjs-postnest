@@ -8,9 +8,9 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 @Injectable()
 export class CategoriesService {
   constructor(
-    @InjectRepository(Category) 
-    private readonly categoryRepository : Repository<Category>
-  ){}
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>
+  ) { }
   create(createCategoryDto: CreateCategoryDto) {
     // const category = new Category()
     // category.name = createCategoryDto.name
@@ -23,16 +23,20 @@ export class CategoriesService {
   }
 
   async findOne(id: number) {
-    const category = await this.categoryRepository.findOneBy({id})
+    const category = await this.categoryRepository.findOneBy({ id })
     if (!category) throw new NotFoundException('La Categoria no existe')
     return category
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    const category = await this.findOne(id)
+    category.name = updateCategoryDto.name
+    return await this.categoryRepository.save(category)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    const category = await this.findOne(id)
+    await this.categoryRepository.remove(category)
+    return 'Categoria eliminada'
   }
 }
