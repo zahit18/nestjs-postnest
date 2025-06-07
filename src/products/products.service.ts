@@ -27,7 +27,7 @@ export class ProductsService {
     })
   }
 
-  async findAll(category_id: number | null) {
+  async findAll(category_id: number | null, take: number, skip: number) {
 
     const options: FindManyOptions<Product> = {
       relations: {
@@ -35,7 +35,9 @@ export class ProductsService {
       },
       order: {
         id: 'DESC'
-      }
+      },
+      take,
+      skip
     }
 
     if (category_id) {
